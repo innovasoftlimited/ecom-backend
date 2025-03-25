@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Repositories\Product;
+
+use App\Helpers\PaginationHelper;
+use App\Models\Product;
+use App\Repositories\BaseRepository;
+use Illuminate\Support\Str;
+
+class ProductRepository extends BaseRepository implements IProductRepository
+{
+    use PaginationHelper;
+
+    /**
+     * BaseRepository constructor
+     *
+     * @param Model $model
+     */
+
+    public function __construct(Product $model)
+    {
+        $this->model = $model;
+    }
+
+    /**
+     * Product list with keyword
+     *
+     * @param  string $keyword
+     * @return array
+     */
+    public function productListWithFilter(?string $keyword = null): array
+    {
+        $queryBuilder = $this->model->newQuery();
+        if ($keyword !== null) {
+            $queryBuilder->where('name', 'like', '%' . $keyword . '%');
+        }
+
+        $products = $queryBuilder->orderBy('id', 'desc')->with('category.parent', 'brand')->get();
+        $perPage  = $paginationOptions['perPage'] ?? null;
+        $page     = $paginationOptions['page'] ?? 1;
+
+        return $this->paginateCollection($products, $perPage, $page);
+    }
+
+}
