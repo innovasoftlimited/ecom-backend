@@ -12,4 +12,10 @@ interface IProductRepository extends IBaseRepository
      */
     public function productListWithFilter(string $keyword): array;
 
+    /**
+     * @param string $keyword
+     * @return array
+     */
+    public function getProductListByName(string $keyword): array;
+
 }

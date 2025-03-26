@@ -79,4 +79,20 @@ class ProductController extends BaseController
         }
     }
 
+    /**
+     *
+     * search product
+     *
+     * @return JsonResponse
+     */
+    public function searchProduct(Request $request): JsonResponse
+    {
+
+        $keyword = $request->input('name');
+
+        $result = $this->productRepository->getProductListByName($keyword);
+
+        return $this->success($result, "Product list retrieved successfully");
+    }
+
 }
