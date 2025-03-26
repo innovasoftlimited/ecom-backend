@@ -10,6 +10,8 @@ use App\Repositories\Cart\CartRepository;
 use App\Repositories\Cart\ICartRepository;
 use App\Repositories\Category\CategoryRepository;
 use App\Repositories\Category\ICategoryRepository;
+use App\Repositories\OrderDetail\IOrderDetailRepository;
+use App\Repositories\OrderDetail\OrderDetailRepository;
 use App\Repositories\Order\IOrderRepository;
 use App\Repositories\Order\OrderRepository;
 use App\Repositories\ProductAttribute\IProductAttributeRepository;
@@ -35,6 +37,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(abstract :ICartRepository::class, concrete: CartRepository::class);
         $this->app->bind(abstract :ICartItemRepository::class, concrete: CartItemRepository::class);
         $this->app->bind(abstract :IOrderRepository::class, concrete: OrderRepository::class);
+        $this->app->bind(abstract :IOrderDetailRepository::class, concrete: OrderDetailRepository::class);
 
     }
 

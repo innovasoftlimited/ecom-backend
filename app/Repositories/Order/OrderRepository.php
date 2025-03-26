@@ -35,7 +35,7 @@ class OrderRepository extends BaseRepository implements IOrderRepository
             $queryBuilder->where('invoice_no', 'like', '%' . $keyword . '%');
         }
 
-        $orders  = $queryBuilder->orderBy('id', 'desc')->with('orderDetails.product')->get();
+        $orders  = $queryBuilder->orderBy('id', 'desc')->with('orderDetails.product.size', 'orderDetails.product.color')->get();
         $perPage = $paginationOptions['perPage'] ?? null;
         $page    = $paginationOptions['page'] ?? 1;
 

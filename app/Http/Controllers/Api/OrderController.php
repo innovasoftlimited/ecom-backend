@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\OrderCreateRequest;
 use App\Http\Services\OrderService;
 use App\Repositories\Order\IOrderRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class OrderController extends BaseController
 {
@@ -34,6 +38,85 @@ class OrderController extends BaseController
         $result = $this->orderRepository->orderListWithFilter($keyword);
 
         return $this->successWithPagination($result, "Order list retrieved successfully");
+    }
+
+    /**
+     * Get a single order by ID
+     *
+     * @param  int $id
+     * @return JsonResponse
+     */
+    public function show(int $id): JsonResponse
+    {
+        $order = $this->orderRepository->find($id);
+        if (!$order) {
+            throw new \Exception("Order not found with ID: " . $id);
+        }
+        $result = $order->load('orderDetails.product.size', 'orderDetails.product.color');
+        return $this->success($result->toArray(), "Order details retrieved successfully");
+    }
+
+    // Create a new order
+    public function store(OrderCreateRequest $request)
+    {
+
+        try {
+            $result = $this->orderService->placeOrder($request->json()->all(), Auth::id());
+            return $this->success($result, "Order placed successfully");
+
+        } catch (\Exception $e) {
+            return $this->error('Error', [$e->getMessage()]);
+        }
+    }
+
+    // Update status of an existing order
+    public function update(Request $request, $id)
+    {
+        try {
+            $order = $this->orderRepository->find($id);
+            if (!$order) {
+                throw new \Exception("Order not found with ID: " . $id);
+            }
+
+            $validator = Validator::make($request->all(), [
+                'status' => 'required|integer',
+            ]);
+
+            $order->update([
+                'status' => $request->status,
+            ]);
+
+            $order->load([
+                'orderDetails.product.size',
+                'orderDetails.product.color',
+            ]);
+
+            return $this->success($order->toArray(), "Order status updated successfully");
+
+        } catch (\Exception $e) {
+            return $this->error('Error', [$e->getMessage()]);
+        }
+    }
+
+    // Delete an order
+    public function destroy($id)
+    {
+        try {
+            $order = $this->orderRepository->find($id);
+            if (!$order) {
+                throw new \Exception("Order not found with ID: " . $id);
+            }
+
+            DB::beginTransaction();
+            $order->orderDetails()->delete();
+            $order->delete();
+            DB::commit();
+
+            return $this->success([], "Order deleted successfully");
+
+        } catch (\Exception $e) {
+            return $this->error('Error', [$e->getMessage()]);
+        }
     }
 
 }
