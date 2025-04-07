@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\OrderStatusEnum;
 use App\Http\Requests\OrderCreateRequest;
 use App\Http\Services\OrderService;
 use App\Repositories\Order\IOrderRepository;
@@ -114,6 +115,48 @@ class OrderController extends BaseController
 
             return $this->success([], "Order deleted successfully");
 
+        } catch (\Exception $e) {
+            return $this->error('Error', [$e->getMessage()]);
+        }
+    }
+
+    /**
+     * Get order status by ID
+     *
+     * @param  int $id
+     * @return JsonResponse
+     */
+    public function trackOrderStatus(int $id): JsonResponse
+    {
+        try {
+            $order = $this->orderRepository->find($id);
+            if (!$order) {
+                throw new \Exception("Order not found with ID: " . $id);
+            }
+            $currentStatusValue = $order->status;
+
+            // List all statuses in order
+            $allStatuses = [
+                OrderStatusEnum::PENDING,
+                OrderStatusEnum::PROCESSING,
+                OrderStatusEnum::SHIPPED,
+                OrderStatusEnum::DELIVERED,
+            ];
+
+            // Include only statuses up to and including the current one
+            $completedStatuses = array_filter($allStatuses, function ($status) use ($currentStatusValue) {
+                return $status->value <= $currentStatusValue;
+            });
+
+            // Format response
+            $result = collect($completedStatuses)->map(function ($status) {
+                return [
+                    'code' => $status->value,
+                    'name' => $status->name,
+                ];
+            })->values();
+
+            return $this->success($result->toArray(), "Order status retrieved successfully");
         } catch (\Exception $e) {
             return $this->error('Error', [$e->getMessage()]);
         }

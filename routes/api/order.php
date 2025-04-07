@@ -8,4 +8,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/orders/{id}', [OrderController::class, 'show']); // Get Single Order
     Route::put('/orders/{id}', [OrderController::class, 'update']); // Update Order
     Route::delete('/orders/{id}', [OrderController::class, 'destroy']); // Delete Order
+    Route::get('/track-order/{id}', [OrderController::class, 'trackOrderStatus']); // track order status
 });
