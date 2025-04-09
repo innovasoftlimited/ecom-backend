@@ -49,14 +49,14 @@ class ProductRepository extends BaseRepository implements IProductRepository
      */
     public function getProductListByName(?string $keyword = null): array
     {
+        $products     = [];
         $queryBuilder = $this->model->newQuery();
         if ($keyword !== null) {
             $queryBuilder->where('name', 'like', '%' . $keyword . '%');
+            $products = $queryBuilder->orderBy('id', 'desc')->select('id', 'name', 'thumb_image')->get()->toArray();
         }
+        return $products;
 
-        $products = $queryBuilder->orderBy('id', 'desc')->select('id', 'name', 'thumb_image')->get();
-
-        return $products->toArray();
     }
 
 }
