@@ -95,4 +95,26 @@ class ProductController extends BaseController
         return $this->success($result, "Product list retrieved successfully");
     }
 
+    /**
+     *
+     * product delete
+     *
+     * @param  integer $id
+     * @return JsonResponse
+     */
+    public function getProductById(int $id): JsonResponse
+    {
+        try {
+            $product = $this->productRepository->find($id);
+            if (!$product) {
+                throw new \Exception("Product not found with ID: " . $id);
+            }
+            $result = $product->load('productDetails.size', 'productDetails.color', 'category.parent', 'brand');
+            return $this->success([$result], "Product details retrieved successfully");
+
+        } catch (\Exception $e) {
+            return $this->error('Error', [$e->getMessage()]);
+        }
+    }
+
 }
