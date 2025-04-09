@@ -35,7 +35,7 @@ class ProductRepository extends BaseRepository implements IProductRepository
             $queryBuilder->where('name', 'like', '%' . $keyword . '%');
         }
 
-        $products = $queryBuilder->orderBy('id', 'desc')->with('category.parent', 'brand')->get();
+        $products = $queryBuilder->orderBy('id', 'desc')->with('productDetails.size', 'productDetails.color', 'category.parent', 'brand')->get();
         $perPage  = $paginationOptions['perPage'] ?? null;
         $page     = $paginationOptions['page'] ?? 1;
 

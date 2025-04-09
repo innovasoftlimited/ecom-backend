@@ -49,6 +49,8 @@ class ProductService
                 'brand_id'    => data_get($data, 'brand_id'),
                 'thumb_image' => $url,
                 'featured'    => data_get($data, 'featured'),
+                'best_seller' => data_get($data, 'best_seller'),
+                'unit_price'  => data_get($data, 'unit_price'),
                 'is_active'   => data_get($data, 'is_active'),
             ];
             if (isset($data['id'])) {

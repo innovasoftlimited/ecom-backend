@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->tinyInteger('best_seller')->nullable()->default(0)->after('featured');
+            $table->float('unit_price', 8, 2)->nullable()->after('best_seller');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('best_seller');
+            $table->dropColumn('unit_price');
         });
     }
 };

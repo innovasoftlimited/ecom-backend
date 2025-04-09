@@ -31,6 +31,8 @@ class ProductCreateOrUpdateRequest extends FormRequest
             'brand_id'                             => 'required',
             'thumb_image'                          => 'nullable',
             'featured'                             => 'required',
+            'best_seller'                          => 'required',
+            'unit_price'                           => 'required',
             'is_active'                            => 'required',
             'product_details'                      => 'required|array',
             'product_details.*.size_attribute_id'  => 'required',
