@@ -73,7 +73,7 @@ class CategoryController extends BaseController
 
         $result = $this->categoryRepository->categoryListWithFilter($keyword);
 
-        return $this->successWithPagination($result, "Category list retrieved successfully");
+        return $this->success($result, "Category list retrieved successfully");
     }
 
     /**
