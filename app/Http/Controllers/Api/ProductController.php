@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Helpers\PaginationHelper;
 use App\Http\Requests\ProductCreateOrUpdateRequest;
 use App\Http\Services\ProductService;
 use App\Repositories\Product\IProductRepository;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ProductController extends BaseController
 {
+    use PaginationHelper;
     /**
      * __construct
      *
@@ -51,7 +53,7 @@ class ProductController extends BaseController
 
         $keyword = $request->input('name');
 
-        $result = $this->productRepository->productListWithFilter($keyword);
+        $result = $this->productRepository->productListWithFilter($keyword, $this->paginationOptionsFromRequest());
 
         return $this->successWithPagination($result, "Product list retrieved successfully");
     }

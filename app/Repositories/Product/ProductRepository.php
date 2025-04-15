@@ -26,9 +26,10 @@ class ProductRepository extends BaseRepository implements IProductRepository
      * Product list with keyword
      *
      * @param  string $keyword
+     * @param  array $paginationOptions
      * @return array
      */
-    public function productListWithFilter(?string $keyword = null): array
+    public function productListWithFilter(?string $keyword = null, array $paginationOptions = []): array
     {
         $queryBuilder = $this->model->newQuery();
         if ($keyword !== null) {

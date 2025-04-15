@@ -24,10 +24,10 @@ class OrderService
         DB::beginTransaction();
         try {
             $order = $this->orderRepository->create([
-                'invoice_no'  => data_get($data, 'invoice_no'),
+                'invoice_no'  => 'INV' . str_pad(mt_rand(1, 99999999), 8, '0', STR_PAD_LEFT),
                 'user_id'     => $userId,
                 'total_price' => data_get($data, 'total_price'),
-                'status'      => data_get($data, 'status'),
+                'status'      => 0,
             ]);
 
             $orderDetails = data_get($data, 'order_details');
