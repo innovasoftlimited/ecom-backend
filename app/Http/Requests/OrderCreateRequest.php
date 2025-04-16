@@ -24,10 +24,8 @@ class OrderCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'invoice_no'                         => 'required|string|unique:orders,invoice_no',
             'user_id'                            => 'required|exists:users,id',
             'total_price'                        => 'required|numeric|min:0',
-            'status'                             => 'required|integer',
             'order_details'                      => 'required|array',
             'order_details.*.product_details_id' => 'required|exists:product_details,id',
             'order_details.*.quantity'           => 'required|integer|min:1',
