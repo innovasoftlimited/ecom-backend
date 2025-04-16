@@ -26,7 +26,7 @@ class AuthController extends BaseController
         $request->validate([
             'name'     => 'required|string|max:255',
             'email'    => 'required|string|email|unique:users',
-            'phone'    => 'required|string|phone|unique:users',
+            'phone'    => 'required|string|regex:/^[0-9\-\(\)\/\+\s]*$/|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
 
