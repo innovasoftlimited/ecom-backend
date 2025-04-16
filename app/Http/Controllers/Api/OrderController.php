@@ -35,12 +35,19 @@ class OrderController extends BaseController
      */
     public function getOrderList(Request $request): JsonResponse
     {
+        try {
+            $user = Auth::user();
+            if ($user->type != 'admin') {
+                throw new \Exception("You cannot access this order list");
+            }
+            $keyword = $request->input('invoice_no');
 
-        $keyword = $request->input('invoice_no');
+            $result = $this->orderRepository->orderListWithFilter($keyword, $this->paginationOptionsFromRequest());
 
-        $result = $this->orderRepository->orderListWithFilter($keyword, $this->paginationOptionsFromRequest());
-
-        return $this->successWithPagination($result, "Order list retrieved successfully");
+            return $this->successWithPagination($result, "Order list retrieved successfully");
+        } catch (\Exception $e) {
+            return $this->error('Error', [$e->getMessage()]);
+        }
     }
 
     /**
