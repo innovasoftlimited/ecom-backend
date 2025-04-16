@@ -9,4 +9,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/orders/{id}', [OrderController::class, 'update']); // Update Order
     Route::delete('/orders/{id}', [OrderController::class, 'destroy']); // Delete Order
     Route::get('/track-order/{id}', [OrderController::class, 'trackOrderStatus']); // track order status
+    Route::get('/user-orders', [OrderController::class, 'getOrderListByUserId']);
 });

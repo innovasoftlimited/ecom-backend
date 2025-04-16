@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enums\OrderStatusEnum;
+use App\Helpers\PaginationHelper;
 use App\Http\Requests\OrderCreateRequest;
 use App\Http\Services\OrderService;
 use App\Repositories\Order\IOrderRepository;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Validator;
 
 class OrderController extends BaseController
 {
+    use PaginationHelper;
     /**
      * __construct
      *
@@ -36,7 +38,7 @@ class OrderController extends BaseController
 
         $keyword = $request->input('invoice_no');
 
-        $result = $this->orderRepository->orderListWithFilter($keyword);
+        $result = $this->orderRepository->orderListWithFilter($keyword, $this->paginationOptionsFromRequest());
 
         return $this->successWithPagination($result, "Order list retrieved successfully");
     }
@@ -160,6 +162,20 @@ class OrderController extends BaseController
         } catch (\Exception $e) {
             return $this->error('Error', [$e->getMessage()]);
         }
+    }
+
+    /**
+     *
+     * Get orders list by user
+     *
+     * @return JsonResponse
+     */
+    public function getOrderListByUserId(): JsonResponse
+    {
+
+        $result = $this->orderRepository->orderListByUserId(Auth::id(), $this->paginationOptionsFromRequest());
+
+        return $this->successWithPagination($result, "Order list retrieved successfully");
     }
 
 }
