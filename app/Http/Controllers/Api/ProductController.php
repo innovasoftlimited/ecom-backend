@@ -34,7 +34,7 @@ class ProductController extends BaseController
     public function productStoreOrUpdate(ProductCreateOrUpdateRequest $request): JsonResponse
     {
         try {
-            $result = $this->productService->createUpdateProduct($request->json()->all(), Auth::id());
+            $result = $this->productService->createUpdateProduct($request, Auth::id());
             return $this->success($result, "Product create or update successfully");
 
         } catch (\Exception $e) {

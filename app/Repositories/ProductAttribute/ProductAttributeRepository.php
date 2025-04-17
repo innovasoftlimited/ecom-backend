@@ -42,4 +42,28 @@ class ProductAttributeRepository extends BaseRepository implements IProductAttri
         return $this->paginateCollection($attributes, $perPage, $page);
     }
 
+    /**
+     * Size attribute list
+     *
+     * @return array
+     */
+    public function sizeAttributeList(): array
+    {
+
+        return $this->model->where('type', 'Size')->orderBy('id', 'desc')->get()->toArray();
+
+    }
+
+    /**
+     * Color attribute list
+     *
+     * @return array
+     */
+    public function colorAttributeList(): array
+    {
+
+        return $this->model->where('type', 'Color')->orderBy('id', 'desc')->get()->toArray();
+
+    }
+
 }

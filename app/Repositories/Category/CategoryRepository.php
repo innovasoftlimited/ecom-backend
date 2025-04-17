@@ -109,4 +109,14 @@ class CategoryRepository extends BaseRepository implements ICategoryRepository
 
     }
 
+    /**
+     * @return array
+     */
+    public function categoryList(): array
+    {
+        return $this->model->whereDoesntHave('children')
+            ->select('id', 'name')
+            ->get()->toArray();
+    }
+
 }

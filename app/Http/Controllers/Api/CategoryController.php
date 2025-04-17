@@ -75,6 +75,19 @@ class CategoryController extends BaseController
 
         return $this->success($result, "Category list retrieved successfully");
     }
+    /**
+     *
+     * Get category list for product create
+     *
+     * @return JsonResponse
+     */
+    public function getCategories(): JsonResponse
+    {
+
+        $result = $this->categoryRepository->categoryList();
+
+        return $this->success($result, "Category list retrieved successfully");
+    }
 
     /**
      *

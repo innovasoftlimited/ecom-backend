@@ -72,6 +72,33 @@ class ProductAttributeController extends BaseController
 
     /**
      *
+     * Get size attribute list
+     *
+     * @return JsonResponse
+     */
+    public function getSizeAttributeList(): JsonResponse
+    {
+
+        $result = $this->productAttributeRepository->sizeAttributeList();
+
+        return $this->success($result, "Size attribute list retrieved successfully");
+    }
+    /**
+     *
+     * Get color attribute list
+     *
+     * @return JsonResponse
+     */
+    public function getColorAttributeList(): JsonResponse
+    {
+
+        $result = $this->productAttributeRepository->colorAttributeList();
+
+        return $this->success($result, "Color attribute list retrieved successfully");
+    }
+
+    /**
+     *
      * product attribute delete
      *
      * @param  integer $id

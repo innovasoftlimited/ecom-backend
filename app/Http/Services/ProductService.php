@@ -18,11 +18,10 @@ class ProductService
     /**
      * Create or Update Product
      *
-     * @param  array $data
-     * @param  int $userId
+     * @param  object $request
      * @return array
      */
-    public function createUpdateProduct(array $data, int $userId): array
+    public function createUpdateProduct(object $request): array
     {
         try {
             if (!Storage::exists('public/uploads')) {
@@ -31,9 +30,17 @@ class ProductService
 
             $directory = 'uploads/products/' . now()->format('Y/m/d');
             DB::beginTransaction();
+            $productDetails = $request->input('product_details');
+            $images         = $request->file('product_details.*.image');
+            foreach ($productDetails as $index => $detail) {
+                if (isset($images[$index])) {
+                    $detail['image'] = $images[$index];
+                }
 
-            $productDetails = data_get($data, 'product_details');
-            $file           = data_get($data, 'thumb_image');
+                $productDetails[$index] = $detail;
+            }
+
+            $file = $request->file('thumb_image');
             if (!is_null($file)) {
                 $fileName = Str::random(20) . '_' . $file->getClientOriginalName();
                 $path     = $file->storeAs($directory, $fileName, 'public');
@@ -43,15 +50,13 @@ class ProductService
             }
 
             $productData = [
-                'name'        => data_get($data, 'name'),
-                'description' => data_get($data, 'description'),
-                'category_id' => data_get($data, 'category_id'),
-                'brand_id'    => data_get($data, 'brand_id'),
+                'name'        => $request->input('name'),
+                'description' => $request->input('description'),
+                'category_id' => $request->input('category_id'),
+                'brand_id'    => $request->input('brand_id'),
                 'thumb_image' => $url,
-                'featured'    => data_get($data, 'featured'),
-                'best_seller' => data_get($data, 'best_seller'),
-                'unit_price'  => data_get($data, 'unit_price'),
-                'is_active'   => data_get($data, 'is_active'),
+                'featured'    => $request->input('featured'),
+                'is_active'   => $request->input('is_active'),
             ];
             if (isset($data['id'])) {
                 $product = $this->productRepository->find($data['id']);
@@ -69,8 +74,7 @@ class ProductService
                 $product = $this->productRepository->create([
                      ...$productData,
                 ]);
-                $this->createProductDetails(data_get($data, 'product_details'), $product->id);
-
+                $this->createProductDetails($productDetails, $product->id);
             }
 
             DB::commit();
@@ -99,8 +103,8 @@ class ProductService
     private function createProductDetails(array $data, int $productId): void
     {
         $directory = 'uploads/products/' . now()->format('Y/m/d');
-        foreach ($data as $pd) {
-            $file = $pd['image'];
+        foreach ($data as $index => $pd) {
+            $file = request()->file('product_details.' . $index . '.image');
             if (!is_null($file)) {
                 $fileName = Str::random(20) . '_' . $file->getClientOriginalName();
                 $path     = $file->storeAs($directory, $fileName, 'public');

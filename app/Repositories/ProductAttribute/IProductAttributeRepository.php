@@ -12,4 +12,14 @@ interface IProductAttributeRepository extends IBaseRepository
      */
     public function productAttributeListWithFilter(string $keyword): array;
 
+    /**
+     * @return array
+     */
+    public function sizeAttributeList(): array;
+
+    /**
+     * @return array
+     */
+    public function colorAttributeList(): array;
+
 }

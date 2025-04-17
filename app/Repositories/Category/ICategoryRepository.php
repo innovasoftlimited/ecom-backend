@@ -12,4 +12,9 @@ interface ICategoryRepository extends IBaseRepository
      */
     public function categoryListWithFilter(string $keyword): array;
 
+    /**
+     * @return array
+     */
+    public function categoryList(): array;
+
 }
