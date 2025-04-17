@@ -56,6 +56,8 @@ class ProductService
                 'brand_id'    => $request->input('brand_id'),
                 'thumb_image' => $url,
                 'featured'    => $request->input('featured'),
+                'best_seller' => $request->input('best_seller'),
+                'unit_price'  => $request->input('unit_price'),
                 'is_active'   => $request->input('is_active'),
             ];
             if (isset($data['id'])) {

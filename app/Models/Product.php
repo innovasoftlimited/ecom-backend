@@ -18,6 +18,8 @@ class Product extends Model
         'brand_id',
         'thumb_image',
         'featured',
+        'best_seller',
+        'unit_price',
         'is_active',
     ];
 
